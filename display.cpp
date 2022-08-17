@@ -53,6 +53,7 @@ void display::mouseReleaseEvent(QMouseEvent *event) {
 }
 #ifdef Q_OS_WIN
 #define PRE (getenv("USERPROFILE") + QString("\\"))
+#pragma warning(disable : 4996)
 #endif
 #ifdef Q_OS_LINUX
 #define PRE (getenv("HOME") + QString("/"))
@@ -65,6 +66,8 @@ void display::save() {
 	default_f.replace(" ", "_");
 	QString filename = QFileDialog::getSaveFileName(
 		this, "", PRE + default_f, "PNG Files(*.png)");
-	pix->copy(QRect(pbeg, pend)).save(filename);
+	if (filename != "") {
+		pix->copy(QRect(pbeg, pend)).save(filename);
+	}
 	close();
 }
