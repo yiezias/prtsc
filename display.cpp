@@ -1,4 +1,5 @@
 #include "display.h"
+#include <QFileDialog>
 #include <QMouseEvent>
 #include <QPainter>
 #include <QTime>
@@ -17,8 +18,7 @@ void display::paintEvent(QPaintEvent *event) {
 	if (point != nullptr) {
 		QRect rect(pbeg, pend);
 		QPixmap out = pix->copy(rect);
-		painter.drawPixmap(
-			pbeg * width() / pix->width(), out);
+		painter.drawPixmap(pbeg * width() / pix->width(), out);
 	}
 }
 
@@ -59,10 +59,12 @@ void display::mouseReleaseEvent(QMouseEvent *event) {
 #endif
 
 void display::save() {
-	QString filename =
-		QDate::currentDate().toString() + " "
-		+ QTime::currentTime().toString() + ".png";
-	filename.replace(":", " ");
-	pix->copy(QRect(pbeg, pend)).save(PRE + filename);
+	QString default_f = QDate::currentDate().toString() + " "
+			    + QTime::currentTime().toString() + ".png";
+	default_f.replace(":", "_");
+	default_f.replace(" ", "_");
+	QString filename = QFileDialog::getSaveFileName(
+		this, "", PRE + default_f, "PNG Files(*.png)");
+	pix->copy(QRect(pbeg, pend)).save(filename);
 	close();
 }
